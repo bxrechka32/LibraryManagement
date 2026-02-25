@@ -1,0 +1,19 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+
+## Visual Studio
+.vs/
+*.vsidx
+*.lock.json
+
+## EF Core
+*.db
+*.db-shm
+*.db-wal
