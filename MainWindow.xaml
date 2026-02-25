@@ -1,0 +1,132 @@
+<Window x:Class="LibraryManagement.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:LibraryManagement.ViewModels"
+        Title="Управление библиотекой" 
+        Height="600" Width="950"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ========== Заголовок ========== -->
+        <TextBlock Grid.Row="0" 
+                   Text="📚 Библиотека книг" 
+                   FontSize="22" FontWeight="Bold" 
+                   Margin="0,0,0,15"
+                   Foreground="#333333" />
+
+        <!-- ========== Панель фильтрации ========== -->
+        <Border Grid.Row="1" 
+                Background="White" CornerRadius="5" 
+                Padding="12" Margin="0,0,0,10"
+                BorderBrush="#DDDDDD" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Фильтр по автору -->
+                <TextBlock Grid.Column="0" Text="Автор:" 
+                           VerticalAlignment="Center" Margin="0,0,8,0"
+                           FontWeight="SemiBold" />
+                <ComboBox Grid.Column="1" 
+                          ItemsSource="{Binding Authors}"
+                          SelectedItem="{Binding SelectedFilterAuthor}"
+                          DisplayMemberPath="FullName"
+                          VerticalAlignment="Center" />
+
+                <!-- Фильтр по жанру -->
+                <TextBlock Grid.Column="3" Text="Жанр:" 
+                           VerticalAlignment="Center" Margin="0,0,8,0"
+                           FontWeight="SemiBold" />
+                <ComboBox Grid.Column="4" 
+                          ItemsSource="{Binding Genres}"
+                          SelectedItem="{Binding SelectedFilterGenre}"
+                          DisplayMemberPath="Name"
+                          VerticalAlignment="Center" />
+
+                <!-- Поиск по названию -->
+                <TextBlock Grid.Column="6" Text="Поиск:" 
+                           VerticalAlignment="Center" Margin="0,0,8,0"
+                           FontWeight="SemiBold" />
+                <TextBox Grid.Column="7" 
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center" Padding="4" />
+
+                <!-- Сбросить фильтры -->
+                <Button Grid.Column="9" Content="Сбросить" 
+                        Command="{Binding ResetFiltersCommand}"
+                        Padding="12,4" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <!-- ========== Таблица книг ========== -->
+        <DataGrid Grid.Row="2" 
+                  ItemsSource="{Binding Books}" 
+                  SelectedItem="{Binding SelectedBook}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  SelectionMode="Single"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  AlternatingRowBackground="#F9F9F9"
+                  BorderBrush="#DDDDDD"
+                  BorderThickness="1"
+                  Margin="0,0,0,10">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="*" />
+                <DataGridTextColumn Header="Автор" Binding="{Binding Author.FullName}" Width="150" />
+                <DataGridTextColumn Header="Жанр" Binding="{Binding Genre.Name}" Width="120" />
+                <DataGridTextColumn Header="Год" Binding="{Binding PublishYear}" Width="60" />
+                <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="160" />
+                <DataGridTextColumn Header="Кол-во" Binding="{Binding QuantityInStock}" Width="60" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ========== Кнопки управления ========== -->
+        <StackPanel Grid.Row="3" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+
+            <Button Content="➕ Добавить" 
+                    Command="{Binding AddBookCommand}"
+                    Padding="16,8" Margin="0,0,8,0"
+                    Background="#4CAF50" Foreground="White"
+                    FontWeight="SemiBold" BorderThickness="0" />
+
+            <Button Content="✏️ Редактировать" 
+                    Command="{Binding EditBookCommand}"
+                    Padding="16,8" Margin="0,0,8,0"
+                    Background="#2196F3" Foreground="White"
+                    FontWeight="SemiBold" BorderThickness="0" />
+
+            <Button Content="🗑️ Удалить" 
+                    Command="{Binding DeleteBookCommand}"
+                    Padding="16,8"
+                    Background="#F44336" Foreground="White"
+                    FontWeight="SemiBold" BorderThickness="0" />
+        </StackPanel>
+    </Grid>
+</Window>
